@@ -67,14 +67,14 @@ def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=N
                 if truncate(coin_detail[0]['lendable'],8) > truncate(coin_detail[0]['locked'],8):
                     try:
                         result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(coin_detail[0]['lendable'],8), coin_detail[0]['minRate'])
-                        logging.info('Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8))) + ' at ' + str(coin_detail[0]['minRate'])
+                        logging.info('Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(coin_detail[0]['minRate']))
                         _print_lending_offer_details(coin_detail[0])
                     except Exception as e:
                         print('Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
                         logging.error('Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
                         print(e)
                 else:
-                    logging.info('No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8))) + ' at ' + str(coin_detail[0]['minRate'])
+                    logging.info('No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(coin_detail[0]['minRate']))
                     _print_lending_offer_details(coin_detail[0])
                     print('     No need to update lending amount.')
 
