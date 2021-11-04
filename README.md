@@ -1,6 +1,10 @@
 # FTX Auto Lend
 
+FTX credits interests from the lending coins hourly back into the account. The newly credited interests are not automatically offered for lending.
+
 FTX Auto Lend is a Python tool to automatically update the margin lending offer to include the payouts from the lending coins in the account. This effectively compounds the earnings.
+
+Do join FTX using my [referral](https://ftx.com/#a=ftxauto).
 
 ## Warning
 
@@ -25,9 +29,11 @@ This will check the existing info for the coin(s) using the `info` option. The r
 ```bash
 % python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
 ```
+### Example
 ```bash
 % python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
 Subaccount: Lending
+
 Coin: BNB
      Locked  : 2.49181547
      Offered : 2.49181547
@@ -47,8 +53,10 @@ This will update the lending offer for the coin(s) using the `compound` option. 
 ```bash
 % python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
 ```
+### Example
 ```bash
 % python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
+
 Coin: BNB
      Amount (old): 2.49181547
      Amount (new): 2.49181547
