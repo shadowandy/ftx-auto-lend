@@ -45,44 +45,44 @@ def _print_lending_offer_details(coin: dict) -> None:
     print('     Rate        : ' + str(coin['minRate']))
 
 def get_coin_lending_info(api_key=None, api_secret=None, subaccount_name=None, coin=None) -> None:
-    account = 'Main account'
+    wallet = 'Main account'
     if subaccount_name:
-        account = 'Subaccount ' + subaccount_name
-    print(account)
+        wallet = 'Subaccount ' + subaccount_name
+    print(wallet)
     try:
         for x in coin:
             result = _get_coin_lending_info(api_key, api_secret, subaccount_name, x)
             for asset in result:
                 if asset['lendable'] > 0:
-                    logging.info(account + ' | Getting Lending Info for ' + asset['coin'])
+                    logging.info(wallet + ' | Getting Lending Info for ' + asset['coin'])
                     _print_lending_details(asset)
     except Exception as e:
-        logging.error(account + ' | Error getting Lending Info.')
-        logging.error(account + ' | ' + str(e))
+        logging.error(wallet + ' | Error getting Lending Info.')
+        logging.error(wallet + ' | ' + str(e))
         print('Error getting Lending Info.')
         print(e)
 
 def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=None) -> None:
     if coin:
-        account = 'Main account'
+        wallet = 'Main account'
         if subaccount_name:
-            account = 'Subaccount ' + subaccount_name
-        print(account)
+            wallet = 'Subaccount ' + subaccount_name
+        print(wallet)
         for x in coin:
             coin_detail = _get_coin_lending_info(api_key, api_secret, subaccount_name, x)
             if coin_detail[0]:
                 if truncate(coin_detail[0]['lendable'],8) > truncate(coin_detail[0]['locked'],8):
                     try:
                         result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(coin_detail[0]['lendable'],8), coin_detail[0]['minRate'])
-                        logging.info(account + ' | Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(coin_detail[0]['minRate']))
+                        logging.info(wallet + ' | Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(coin_detail[0]['minRate']))
                         _print_lending_offer_details(coin_detail[0])
                     except Exception as e:
-                        logging.error(account + ' | Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
-                        logging.error(account + ' | ' + str(e))
+                        logging.error(wallet + ' | Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
+                        logging.error(wallet + ' | ' + str(e))
                         print('Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
                         print(e)
                 else:
-                    logging.info(account + ' | No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(coin_detail[0]['minRate']))
+                    logging.info(wallet + ' | No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(coin_detail[0]['minRate']))
                     _print_lending_offer_details(coin_detail[0])
                     print('     No need to update lending amount.')
 
