@@ -23,6 +23,20 @@ This will check the existing info for the coin(s). The required information are 
 ```bash
 python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
 ```
+```bash
+python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
+Subaccount: Lending
+Coin: BNB
+     Locked  : 2.49181547
+     Offered : 2.49181547
+     Lendable: 2.49181547
+     Rate    : 3.42e-06
+Coin: USD
+     Locked  : 3527.64021287
+     Offered : 3527.64021287
+     Lendable: 3527.71270588
+     Rate    : 3.42e-06
+```
 
 ## Update Lending Offer
 
@@ -30,4 +44,16 @@ This will update the lending offer for the coin(s). The required information are
 
 ```bash
 python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
+```
+```bash
+python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
+Coin: BNB
+     Amount (old): 2.49181547
+     Amount (new): 2.49181547
+     Rate        : 3.42e-06
+     No need to update lending amount.
+Coin: USD
+     Amount (old): 3527.64021287
+     Amount (new): 3527.71270588
+     Rate        : 3.42e-06
 ```
