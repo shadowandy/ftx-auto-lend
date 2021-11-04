@@ -20,7 +20,7 @@ Do creating a lending sub-account as the tool:
 
 ## Get Existing Lending Info
 
-This will check the existing info for the coin(s). The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
+This will check the existing info for the coin(s) using the `info` option. The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
 
 ```bash
 % python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
@@ -42,7 +42,7 @@ Coin: USD
 
 ## Update Lending Offer
 
-This will update the lending offer for the coin(s). The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
+This will update the lending offer for the coin(s) using the `compound` option. The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
 
 ```bash
 % python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
