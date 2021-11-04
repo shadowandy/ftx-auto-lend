@@ -1,10 +1,11 @@
 import fire
 import math
 import logging
+import os
 from typing import Dict, List
 from modules.FTX import FTXClient
 
-#logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 logging.basicConfig(filename='run.log', filemode='a', format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
 def truncate(number, digits) -> float:
