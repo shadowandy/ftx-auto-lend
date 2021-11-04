@@ -1,7 +1,11 @@
 import fire
 import math
+import logging
 from typing import Dict, List
-from FTX import FTXClient
+from modules.FTX import FTXClient
+
+#logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+logging.basicConfig(filename='run.log', filemode='a', format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
 def truncate(number, digits) -> float:
     stepper = 10.0 ** digits
@@ -39,18 +43,20 @@ def _print_lending_offer_details(coin: dict) -> None:
     print('     Rate        : ' + str(coin['minRate']))
 
 def get_coin_lending_info(api_key=None, api_secret=None, subaccount_name=None, coin=None) -> None:
+    account = 'Main account'
     if subaccount_name:
-        print('Subaccount: ' + subaccount_name)
-    else:
-        print('Main')
+        account = 'Subaccount ' + subaccount_name
+    print(account)
     try:
         for x in coin:
             result = _get_coin_lending_info(api_key, api_secret, subaccount_name, x)
             for asset in result:
                 if asset['lendable'] > 0:
+                    logging.info('Getting Lending Info for ' + account + ' - ' + asset['coin'])
                     _print_lending_details(asset)
     except Exception as e:
-        print('Error getting lending info.')
+        logging.error('Error getting Lending Info.')
+        print('Error getting Lending Info.')
         print(e)
 
 def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=None) -> None:
@@ -59,13 +65,16 @@ def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=N
             coin_detail = _get_coin_lending_info(api_key, api_secret, subaccount_name, x)
             if coin_detail[0]:
                 if truncate(coin_detail[0]['lendable'],8) > truncate(coin_detail[0]['locked'],8):
-                    result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(coin_detail[0]['lendable'],8), coin_detail[0]['minRate'])
                     try:
+                        result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(coin_detail[0]['lendable'],8), coin_detail[0]['minRate'])
+                        logging.info('Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8))) + ' at ' + str(coin_detail[0]['minRate'])
                         _print_lending_offer_details(coin_detail[0])
                     except Exception as e:
-                        print('Error updating new lending amount.')
+                        print('Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
+                        logging.error('Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
                         print(e)
                 else:
+                    logging.info('No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8))) + ' at ' + str(coin_detail[0]['minRate'])
                     _print_lending_offer_details(coin_detail[0])
                     print('     No need to update lending amount.')
 
