@@ -21,10 +21,10 @@ pip3 install -r requirements.txt
 This will check the existing info for the coin(s). The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
 
 ```bash
-python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
+% python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
 ```
 ```bash
-python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
+% python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
 Subaccount: Lending
 Coin: BNB
      Locked  : 2.49181547
@@ -43,10 +43,10 @@ Coin: USD
 This will update the lending offer for the coin(s). The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
 
 ```bash
-python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
+% python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
 ```
 ```bash
-python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
+% python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BNB,USD
 Coin: BNB
      Amount (old): 2.49181547
      Amount (new): 2.49181547
