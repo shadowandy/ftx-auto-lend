@@ -13,7 +13,7 @@ Do creating a lending sub-account as the tool:
 ## Installation
 
 ```bash
-% git pull https://github.com/shadowandy/ftx-auto-lend.git
+% git clone https://github.com/shadowandy/ftx-auto-lend.git
 % cd ftx-auto-lend
 % pip3 install -r requirements.txt
 ```
