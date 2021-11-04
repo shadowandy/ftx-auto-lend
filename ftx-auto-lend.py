@@ -5,6 +5,7 @@ import os
 from typing import Dict, List
 from modules.FTX import FTXClient
 
+# Logging to where this script is at
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 logging.basicConfig(filename='run.log', filemode='a', format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
