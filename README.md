@@ -21,7 +21,7 @@ pip3 install -r requirements.txt
 This will check the existing info for the coin(s). The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
 
 ```bash
-python3 ftx-auto-lend.py info --api_key <api_key> --api_secret <api_secret> --subaccount_name <subaccount name> --coin BTC,ETH
+python3 ftx-auto-lend.py info --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
 ```
 
 ## Update Lending Offer
@@ -29,5 +29,5 @@ python3 ftx-auto-lend.py info --api_key <api_key> --api_secret <api_secret> --su
 This will update the lending offer for the coin(s). The required information are `--api_key`, `--api_secret`, `--subaccount_name` and `--coin`.
 
 ```bash
-python3 ftx-auto-lend.py compound --api_key <api_key> --api_secret <api_secret> --subaccount_name <subaccount name> --coin BTC,ETH
+python3 ftx-auto-lend.py compound --api_key 123fasc --api_secret fsac123 --subaccount_name Lending --coin BTC,ETH
 ```
