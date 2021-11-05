@@ -7,7 +7,7 @@ from modules.FTX import FTXClient
 
 # Logging to where this script is at
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-logging.basicConfig(filename='run.log', filemode='a', format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
+logging.basicConfig(filename='run.log', filemode='a', format='%(asctime)s | %(levelname)s | %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
 
 def truncate(number, digits) -> float:
     stepper = 10.0 ** digits
