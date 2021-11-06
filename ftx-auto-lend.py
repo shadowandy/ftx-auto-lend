@@ -44,23 +44,49 @@ def _submit_lending_offer(api_key, api_secret, subaccount_name, coin, size, rate
     response = client.post(f'/spot_margin/offers',{'coin': coin,'size': size, 'rate': rate})
     return response
 
+def _print_detail(content: dict, header=False) -> None:
+    if header:
+        header_item = next(iter(content))
+        print(str(header_item) + ': ' + str(content[header_item]))
+        content.pop(header_item)
+    key_len = 0
+    for key in content.keys():
+        if len(str(key)) > key_len:
+            key_len = len(str(key))
+    for key, value in content.items():
+        spaces = ' ' * (key_len - len(str(key)))
+        if header:
+            pad = ' ' * 5
+        print(pad + str(key) + spaces + ': ' + str(value))
+
 def _print_lending_rates_details(coin: dict) -> None:
-    print('Coin: ' + str(coin['coin']))
-    print('     Estimate (APY): ' + str(truncate(coin['estimate']*24*36500,2)) + '%')
-    print('     Previous (APY): ' + str(truncate(coin['previous']*24*36500,2)) + '%')
+    _print_detail({ 'Coin' : coin['coin'],
+                    'Estimate APY (%)' : truncate(coin['estimate']*24*36500,2),
+                    'Previous APY (%)' : truncate(coin['previous']*24*36500,2)},
+                    True)
 
 def _print_lending_details(coin: dict) -> None:
-    print('Coin: ' + str(coin['coin']))
-    print('     Locked   : ' + str(truncate(coin['locked'],8)))
-    print('     Offered  : ' + str(truncate(coin['offered'],8)))
-    print('     Lendable : ' + str(truncate(coin['lendable'],8)))
-    print('     Rate (APY): ' + str(truncate(coin['minRate']*24*36500,2)) + '%')
+    _print_detail({ 'Coin' : coin['coin'],
+                    'Locked' : truncate(coin['locked'],8),
+                    'Offered' : truncate(coin['offered'],8),
+                    'Lendable' : truncate(coin['lendable'],8),
+                    'APY (%)' : str(truncate(coin['minRate']*24*36500,2))},
+                    True)
 
-def _print_lending_offer_details(coin: dict) -> None:
-    print('Coin: ' + str(coin['coin']))
-    print('     Amount (old): ' + str(truncate(coin['locked'],8)))
-    print('     Amount (new): ' + str(truncate(coin['lendable'],8)))
-    print('     Rate (APY)  : ' + str(truncate(coin['minRate']*24*36500,2)) + '%')
+def _print_lending_offer_details(coin: dict, message=None) -> None:
+    if message:
+        _print_detail({ 'Coin' : coin['coin'],
+                        'Amount (old)' : truncate(coin['locked'],8),
+                        'Amount (new)' : truncate(coin['lendable'],8),
+                        'Previous APY (%)' : truncate(coin['minRate']*24*36500,2),
+                        '' : message},
+                        True)
+    else:
+        _print_detail({ 'Coin' : coin['coin'],
+                        'Amount (old)' : truncate(coin['locked'],8),
+                        'Amount (new)' : truncate(coin['lendable'],8),
+                        'Previous APY (%)' : truncate(coin['minRate']*24*36500,2)},
+                        True)
 
 def get_coin_lending_rates(api_key=None, api_secret=None, subaccount_name=None, coin=None) -> None:
     wallet = 'Main account'
@@ -116,7 +142,7 @@ def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=N
                     try:
                         result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(coin_detail[0]['lendable'],8), coin_detail[0]['minRate'])
                         logging.info(wallet + ' - Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(coin_detail[0]['lendable']) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
-                        _print_lending_offer_details(coin_detail[0])
+                        _print_lending_offer_details(coin_detail[0], f'Updated lending amount.')
                     except Exception as e:
                         logging.error(wallet + ' - Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
                         logging.error(wallet + ' - ' + str(e))
@@ -124,8 +150,7 @@ def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=N
                         print(e)
                 else:
                     logging.info(wallet + ' - No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(coin_detail[0]['lendable']) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
-                    _print_lending_offer_details(coin_detail[0])
-                    print('     No need to update lending amount.')
+                    _print_lending_offer_details(coin_detail[0], f'No need to update lending amount.')
 
 if __name__ == '__main__':
     fire.Fire({
