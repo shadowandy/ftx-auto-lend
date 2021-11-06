@@ -50,6 +50,7 @@ def _print_detail(content: dict, header=False) -> None:
         print(str(header_item) + ': ' + str(content[header_item]))
         content.pop(header_item)
     key_len = 0
+    pad = ''
     for key in content.keys():
         if len(str(key)) > key_len:
             key_len = len(str(key))
@@ -70,7 +71,7 @@ def _print_lending_details(coin: dict) -> None:
                     'Locked' : truncate(coin['locked'],8),
                     'Offered' : truncate(coin['offered'],8),
                     'Lendable' : truncate(coin['lendable'],8),
-                    'APY (%)' : str(truncate(coin['minRate']*24*36500,2))},
+                    'APY (%)' : truncate(coin['minRate']*24*36500,2)},
                     True)
 
 def _print_lending_offer_details(coin: dict, message=None) -> None:
@@ -141,7 +142,7 @@ def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=N
                 if truncate(coin_detail[0]['lendable'],8)  > truncate(coin_detail[0]['locked'],8):
                     try:
                         result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(coin_detail[0]['lendable'],8), coin_detail[0]['minRate'])
-                        logging.info(wallet + ' - Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(coin_detail[0]['lendable']) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
+                        logging.info(wallet + ' - Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
                         _print_lending_offer_details(coin_detail[0], f'Updated lending amount.')
                     except Exception as e:
                         logging.error(wallet + ' - Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
