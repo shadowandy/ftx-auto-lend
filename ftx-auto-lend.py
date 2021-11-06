@@ -67,6 +67,8 @@ def get_coin_lending_rates(api_key=None, api_secret=None, subaccount_name=None, 
     if subaccount_name:
         wallet = 'Subaccount ' + subaccount_name
     print(wallet)
+    if isinstance(coin, str):
+        coin = tuple([coin])
     try:
         for x in coin:
             result = _get_coin_lending_rates(api_key, api_secret, subaccount_name, x)
@@ -84,6 +86,8 @@ def get_coin_lending_info(api_key=None, api_secret=None, subaccount_name=None, c
     if subaccount_name:
         wallet = 'Subaccount ' + subaccount_name
     print(wallet)
+    if isinstance(coin, str):
+        coin = tuple([coin])
     try:
         for x in coin:
             result = _get_coin_lending_info(api_key, api_secret, subaccount_name, x)
@@ -97,29 +101,43 @@ def get_coin_lending_info(api_key=None, api_secret=None, subaccount_name=None, c
         print('Error getting Lending Info.')
         print(e)
 
-def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=None) -> None:
+def compound_lending(api_key=None, api_secret=None, subaccount_name=None, coin=None, amount=-1.0) -> None:
     if coin:
         wallet = 'Main account'
         if subaccount_name:
             wallet = 'Subaccount ' + subaccount_name
         print(wallet)
+        if isinstance(coin, str):
+            coin = tuple([coin])
         for x in coin:
             coin_detail = _get_coin_lending_info(api_key, api_secret, subaccount_name, x)
             if coin_detail[0]:
-                if truncate(coin_detail[0]['lendable'],8) > truncate(coin_detail[0]['locked'],8):
+                amount_to_lend = 0.0
+                update_lend = False
+                if amount > 0:
+                    amount_to_lend = amount
+                    if truncate(amount,8) <= truncate(coin_detail[0]['lendable'],8) and truncate(amount,8) is not truncate(coin_detail[0]['locked'],8):
+                        update_lend = True
+                else:
+                    amount_to_lend = coin_detail[0]['lendable']
+                    if truncate(coin_detail[0]['lendable'],8)  > truncate(coin_detail[0]['locked'],8):
+                        update_lend = True
+
+                if update_lend:
                     try:
-                        result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(coin_detail[0]['lendable'],8), coin_detail[0]['minRate'])
-                        logging.info(wallet + ' - Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
-                        _print_lending_offer_details(coin_detail[0])
+                        result = _submit_lending_offer(api_key, api_secret, subaccount_name, coin_detail[0]['coin'], truncate(amount_to_lend,8), coin_detail[0]['minRate'])
+                        logging.info(wallet + ' - Updated Lending Offer for ' + str(coin_detail[0]['coin']) + ' from ' + str(truncate(coin_detail[0]['locked'],8)) + ' to ' + str(amount_to_lend) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
+                        _print_lending_offer_details({'coin': coin_detail[0]['coin'],'locked': coin_detail[0]['locked'], 'lendable': amount_to_lend, 'minRate':coin_detail[0]['minRate']})
                     except Exception as e:
                         logging.error(wallet + ' - Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
                         logging.error(wallet + ' - ' + str(e))
                         print('Error updating Lending Offer for ' + str(coin_detail[0]['coin']))
                         print(e)
                 else:
-                    logging.info(wallet + ' - No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(truncate(coin_detail[0]['lendable'],8)) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
-                    _print_lending_offer_details(coin_detail[0])
+                    logging.info(wallet + ' - No changes to Lending Offer for ' + str(coin_detail[0]['coin']) + ' ' + str(amount_to_lend) + ' at ' + str(truncate(coin_detail[0]['minRate']*24*36500,2)) + '% APY')
+                    _print_lending_offer_details({'coin': coin_detail[0]['coin'],'locked': coin_detail[0]['locked'], 'lendable': amount_to_lend, 'minRate':coin_detail[0]['minRate']})
                     print('     No need to update lending amount.')
+
 
 if __name__ == '__main__':
     fire.Fire({
